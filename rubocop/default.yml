@@ -9,6 +9,7 @@ Metrics/BlockLength:
   Exclude:
     - "db/**/*.rb"
     - "spec/**/*.rb"
+    - "**/*_pb.rb"
 Metrics/ClassLength:
   Max: 1500
 Metrics/CyclomaticComplexity:
