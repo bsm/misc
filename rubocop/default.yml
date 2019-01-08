@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - "db/schema.rb"
     - "vendor/**/*"
+    - "**/*_pb.rb"
 
 Metrics/AbcSize:
   Enabled: false
@@ -9,7 +10,6 @@ Metrics/BlockLength:
   Exclude:
     - "db/**/*.rb"
     - "spec/**/*.rb"
-    - "**/*_pb.rb"
 Metrics/ClassLength:
   Max: 1500
 Metrics/CyclomaticComplexity:
