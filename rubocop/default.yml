@@ -7,6 +7,7 @@ Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
   Exclude:
+    - "**/*.rake"
     - "db/**/*.rb"
     - "spec/**/*.rb"
     - "**/*_pb.rb"
