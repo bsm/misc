@@ -11,6 +11,7 @@ Metrics/BlockLength:
     - "**/*.rake"
     - "db/**/*.rb"
     - "spec/**/*.rb"
+    - "**/*.gemspec"
 Metrics/ClassLength:
   Max: 1500
 Metrics/CyclomaticComplexity:
