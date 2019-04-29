@@ -10,7 +10,7 @@ Metrics/BlockLength:
   Exclude:
     - "**/*.rake"
     - "db/**/*.rb"
-    - "spec/**/*.rb"
+    - "**/spec/**/*.rb"
     - "**/*.gemspec"
 Metrics/ClassLength:
   Max: 1500
