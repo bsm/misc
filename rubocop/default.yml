@@ -28,6 +28,8 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 20
 
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
 Layout/AlignHash:
   EnforcedHashRocketStyle: table
 Layout/AlignParameters:
