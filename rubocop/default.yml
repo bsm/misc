@@ -39,7 +39,7 @@ Layout/EmptyLinesAroundBlockBody:
     - "**/*_spec.rb"
 Layout/EmptyLinesAroundClassBody:
   Enabled: false
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 Layout/MultilineOperationIndentation:
   Enabled: false
