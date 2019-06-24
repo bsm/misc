@@ -1,12 +1,6 @@
-ifndef DATABASE_MIGRATIONS
-  DATABASE_MIGRATIONS=db/migrations
-endif
-ifndef DATABASE_SCHEMA
-  DATABASE_SCHEMA=db/schema.sql
-endif
-ifndef DATABASE_MIGRATE
-  DATABASE_MIGRATE=migrate
-endif
+DATABASE_MIGRATIONS ?= db/migrations
+DATABASE_SCHEMA ?= db/schema.sql
+DATABASE_MIGRATE ?= migrate
 
 DATABASE_NAME=$(firstword $(subst ?, ,$(notdir $(DATABASE_URL))))
 DATABASE_MAINTENANCE_URL=$(subst $(DATABASE_NAME),postgres,$(DATABASE_URL))
@@ -34,7 +28,7 @@ db.migration:
 		exit 1; \
 	else \
 		timestamp=$$(date +%s); \
-		touch $(DATABASE_MIGRATIONS)/$(timestamp)_$(NAME).up.sql $(DATABASE_MIGRATIONS)/$(timestamp)_$(NAME).down.sql; \
+		touch $(DATABASE_MIGRATIONS)/$${timestamp}_$(NAME).up.sql $(DATABASE_MIGRATIONS)/$${timestamp}_$(NAME).down.sql; \
 	fi
 
 .PHONY: db.migrate db.migrate.up db.migrate.down db.migration
