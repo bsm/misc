@@ -28,11 +28,11 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 20
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: table
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
@@ -41,7 +41,7 @@ Layout/EmptyLinesAroundBlockBody:
     - "**/*_spec.rb"
 Layout/EmptyLinesAroundClassBody:
   Enabled: false
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 Layout/MultilineOperationIndentation:
   Enabled: false
