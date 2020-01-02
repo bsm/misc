@@ -26,15 +26,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 20
 
-Layout/ArgumentAlignment:
-  EnforcedStyle: with_fixed_indentation
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - "db/**/*.rb"
-    - "**/*.rake"
-    - "**/*_spec.rb"
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 Layout/HashAlignment:
@@ -45,8 +36,6 @@ Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 Layout/MultilineOperationIndentation:
   Enabled: false
-Layout/SpaceAroundEqualsInParameterDefault:
-  EnforcedStyle: no_space
 Layout/SpaceInsideBlockBraces:
   SpaceBeforeBlockParameters: false
 
