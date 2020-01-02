@@ -16,8 +16,6 @@ Metrics/ClassLength:
   Max: 1500
 Metrics/CyclomaticComplexity:
   Max: 20
-Metrics/LineLength:
-  Max: 160
 Metrics/MethodLength:
   Max: 20
   Exclude:
@@ -30,10 +28,6 @@ Metrics/PerceivedComplexity:
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
-Layout/HashAlignment:
-  EnforcedHashRocketStyle: table
-Layout/ParameterAlignment:
-  EnforcedStyle: with_fixed_indentation
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
     - "db/**/*.rb"
@@ -43,6 +37,12 @@ Layout/EmptyLinesAroundClassBody:
   Enabled: false
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+Layout/LineLength:
+  Max: 160
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
 Layout/MultilineOperationIndentation:
   Enabled: false
 Layout/SpaceAroundEqualsInParameterDefault:
