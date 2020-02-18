@@ -9,6 +9,8 @@
 #
 #   include .database.makefile
 #
+# And then .gitignore it: .*.makefile
+#
 
 DATABASE_MIGRATIONS ?= db/migrations
 DATABASE_SCHEMA ?= db/schema.sql
