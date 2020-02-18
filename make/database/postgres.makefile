@@ -1,3 +1,15 @@
+# Common PostgreSQL database tasks.
+#
+# Embed into project Makefile like this:
+#
+#   DATABASE_URL ?= postgres://root:root@localhost:5432/DBNAME?sslmode=disable
+#
+#   .database.makefile:
+#     curl -sSL https://gitlab.com/bsm/misc/raw/master/make/database/postgres.makefile > $@
+#
+#   include .database.makefile
+#
+
 DATABASE_MIGRATIONS ?= db/migrations
 DATABASE_SCHEMA ?= db/schema.sql
 DATABASE_MIGRATE ?= migrate
