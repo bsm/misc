@@ -10,6 +10,8 @@
 #
 #   include .build.makefile
 #
+# And then .gitignore it: .*.makefile
+#
 
 BINARIES=$(patsubst cmd/%/main.go,bin/%,$(wildcard cmd/*/main.go))
 STATIC_BINARIES=$(patsubst cmd/%/main.go,bin/%-static,$(wildcard cmd/*/main.go))
