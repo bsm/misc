@@ -6,7 +6,7 @@
 # Embed into project Makefile like this:
 #
 #   .build.makefile:
-#     curl -sSL https://gitlab.com/bsm/misc/raw/master/make/go/build.makefile > $@
+#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/go/build.makefile
 #
 #   include .build.makefile
 #
