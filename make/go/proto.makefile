@@ -48,7 +48,7 @@ proto.rb: $(patsubst %.proto,%_pb.rb,$(PROTOGO_SRCS))
 	protoc --gogo_out=$(subst $(eval) ,$(protogo_comma),$(PROTOGO_FLAG)):. --proto_path=$(PROTOGO_PATH) $<
 
 %_pb.rb: %.proto $(PROTOGO_DEPS)
-	protoc --ruby_out=. --proto_path=$(PROTOGO_SRCS) $<
+	protoc --ruby_out=. --proto_path=$(PROTOGO_PATH) $<
 
 # ---------------------------------------------------------------------
 
