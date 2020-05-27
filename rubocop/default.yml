@@ -69,24 +69,23 @@ Style/TrailingCommaInHashLiteral:
 # TODO: review after v1 is released
 # ---------------------------------------------------------------------
 
-# Introduced in v0.80
-Style/HashEachMethods:
+Style/HashEachMethods: # (0.80)
   Enabled: true
-Style/HashTransformKeys:
+Style/HashTransformKeys: # (0.80)
   Enabled: true
-Style/HashTransformValues:
+Style/HashTransformValues: # (0.80)
   Enabled: true
-
-# Introduced in v0.81
-
-Lint/RaiseException:
+Lint/RaiseException: # (0.81)
   Enabled: true
-Lint/StructNewOverride:
+Lint/StructNewOverride: # (0.81)
   Enabled: true
-
-# Introduced in v0.82
-
-Layout/SpaceAroundMethodCallOperator:
+Layout/SpaceAroundMethodCallOperator: # (0.82)
   Enabled: true
-Style/ExponentialNotation:
+Style/ExponentialNotation: # (0.82)
+  Enabled: true
+Layout/EmptyLinesAroundAttributeAccessor: # (0.83)
+  Enabled: true
+Style/SlicingWithRange: # (0.83)
+  Enabled: true
+Lint/DeprecatedOpenSSLConstant: # (0.84)
   Enabled: true
