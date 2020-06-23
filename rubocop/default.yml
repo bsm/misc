@@ -1,4 +1,6 @@
 AllCops:
+  # TODO: review after v1 is released
+  NewCops: enable
   Exclude:
     - "db/schema.rb"
     - "vendor/**/*"
@@ -65,33 +67,3 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
-
-# TODO: review after v1 is released
-# ---------------------------------------------------------------------
-
-Style/HashEachMethods: # (0.80)
-  Enabled: true
-Style/HashTransformKeys: # (0.80)
-  Enabled: true
-Style/HashTransformValues: # (0.80)
-  Enabled: true
-Lint/RaiseException: # (0.81)
-  Enabled: true
-Lint/StructNewOverride: # (0.81)
-  Enabled: true
-Layout/SpaceAroundMethodCallOperator: # (0.82)
-  Enabled: true
-Style/ExponentialNotation: # (0.82)
-  Enabled: true
-Layout/EmptyLinesAroundAttributeAccessor: # (0.83)
-  Enabled: true
-Style/SlicingWithRange: # (0.83)
-  Enabled: true
-Lint/DeprecatedOpenSSLConstant: # (0.84)
-  Enabled: true
-Lint/MixedRegexpCaptureTypes: # (0.85)
-  Enabled: true
-Style/RedundantRegexpCharacterClass: # (0.85)
-  Enabled: true
-Style/RedundantRegexpEscape: # (0.85)
-  Enabled: true
