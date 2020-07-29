@@ -12,7 +12,7 @@
 
 GO_MOD_FILES=$(shell find . -name 'go.mod')
 
-vet: $(patsubst %/go.mod,vet/%,$(GO_MOD_FILES))
+vet:
 test: $(patsubst %/go.mod,test/%,$(GO_MOD_FILES))
 bench: $(patsubst %/go.mod,bench/%,$(GO_MOD_FILES))
 staticcheck: $(patsubst %/go.mod,staticcheck/%,$(GO_MOD_FILES))
@@ -20,9 +20,6 @@ update-deps: $(patsubst %/go.mod,update-deps/%,$(GO_MOD_FILES))
 tidy: $(patsubst %/go.mod,tidy/%,$(GO_MOD_FILES))
 
 .PHONY: vet test bench staticcheck update-deps tidy
-
-vet/%: %
-	cd $< && go vet ./...
 
 test/%: %
 	cd $< && go test ./...
