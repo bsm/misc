@@ -16,10 +16,9 @@ vet:
 test: $(patsubst %/go.mod,test/%,$(GO_MOD_FILES))
 bench: $(patsubst %/go.mod,bench/%,$(GO_MOD_FILES))
 staticcheck: $(patsubst %/go.mod,staticcheck/%,$(GO_MOD_FILES))
-update-deps: $(patsubst %/go.mod,update-deps/%,$(GO_MOD_FILES))
 tidy: $(patsubst %/go.mod,tidy/%,$(GO_MOD_FILES))
 
-.PHONY: vet test bench staticcheck update-deps tidy
+.PHONY: vet test bench staticcheck tidy
 
 test/%: %
 	cd $< && go test ./...
@@ -29,9 +28,6 @@ bench/%: %
 
 staticcheck/%: %
 	cd $< && staticcheck ./...
-
-update-deps/%: %
-	cd $< && go get -u ./... && go mod tidy
 
 tidy/%: %
 	cd $< && go mod tidy

@@ -19,11 +19,7 @@ bench:
 staticcheck:
 	staticcheck ./...
 
-update-deps:
-	go get -u ./...
-	go mod tidy
-
 tidy:
 	go mod tidy
 
-.PHONY: test bench staticcheck update-deps tidy
+.PHONY: test bench staticcheck tidy
