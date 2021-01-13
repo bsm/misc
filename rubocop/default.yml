@@ -1,5 +1,4 @@
 AllCops:
-  # TODO: review after v1 is released
   NewCops: enable
   Exclude:
     - "db/schema.rb"
@@ -67,3 +66,8 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
