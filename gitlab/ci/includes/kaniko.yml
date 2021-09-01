@@ -4,11 +4,12 @@
     entrypoint: [""]
   variables:
     CONTEXT: $CI_PROJECT_DIR
+    REPOSITORY: $CI_REGISTRY/$CI_PROJECT_PATH
     DOCKERFILE: $CI_PROJECT_DIR/Dockerfile
-    DESTINATION: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA
+    DESTINATION: $REPOSITORY:$CI_COMMIT_SHORT_SHA
     SNAPSHOT_MODE: redo
     VERBOSITY: error
-    CACHE_FLAGS: "--cache=true --cache-repo=$CI_REGISTRY/$CI_PROJECT_PATH/cache"
+    CACHE_FLAGS: --cache=true --cache-repo=$REPOSITORY/cache
     EXTRA_FLAGS: ""
   before_script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
@@ -18,6 +19,6 @@
 .kaniko.ecr:
   extends: .kaniko.gitlab
   variables:
-    CACHE_FLAGS: ""
+    CACHE_FLAGS: "--cache=true"
   before_script:
     - echo "{\"credsStore\":\"ecr-login\"}" > /kaniko/.docker/config.json
