@@ -1,0 +1,19 @@
+.golang.env:
+  variables:
+    GOCACHE: $CI_PROJECT_DIR/.go/cache
+    GOMODCACHE: $CI_PROJECT_DIR/.go/modcache
+  before_script:
+    - mkdir -p .go
+  cache:
+    - key: "go-$CI_JOB_NAME"
+      paths:
+        - .go
+
+.golang.lint:
+  extends: .golang.env
+  stage: test
+  image: golangci/golangci-lint:latest
+  script:
+    - golangci-lint run --timeout 5m
+  variables:
+    GOLANGCI_LINT_CACHE: $CI_PROJECT_DIR/.go/lintcache
