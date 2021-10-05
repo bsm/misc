@@ -10,7 +10,7 @@
 # And then .gitignore it: .*.makefile
 #
 
-GO_MOD_FILES=$(shell find . -name 'go.mod')
+GO_MOD_FILES=$(shell find . -name 'go.mod' -not -path '*/.*')
 
 vet:
 test: $(patsubst %/go.mod,test/%,$(GO_MOD_FILES))
