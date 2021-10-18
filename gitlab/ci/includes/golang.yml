@@ -2,8 +2,6 @@
   variables:
     GOCACHE: $CI_PROJECT_DIR/.go/cache
     GOMODCACHE: $CI_PROJECT_DIR/.go/modcache
-  before_script:
-    - mkdir -p .go
   cache:
     - key: "go-$CI_JOB_NAME"
       paths:
