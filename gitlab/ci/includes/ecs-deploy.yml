@@ -1,0 +1,66 @@
+# These tasks ONLY UPDATE already deployed tasks/services.
+# These tasks are not meant to deploy anything from scratch.
+
+# Common configuration - you don't have to include this (as it is already included),
+# but you should override REQUIRED variables in your CI config:
+.ecs-deploy.common:
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  variables:
+    CLUSTER: null # REQUIRED, cluster name
+    SERVICE: null # REQUIRED, service name
+    TASK_FAMILY: "${CLUSTER}-${SERVICE}" # OPTIONAL, override to customize
+    IMAGE: null # REQUIRED, smth like: PROJECT.dkr.ecr.REGION.amazonaws.com/PATH/IMAGE:TAG
+
+# ECS long-running services/workers:
+.ecs-deploy.service:
+  extends: .ecs-deploy.common
+  script:
+    # update task definition:
+    - task_definition=$(aws ecs describe-task-definition --task-definition "${TASK_FAMILY}")
+    - task_cpu=$(echo "${task_definition}" | jq '.taskDefinition.cpu' -r)
+    - task_memory=$(echo "${task_definition}" | jq '.taskDefinition.memory' -r)
+    - task_execution_role=$(echo "${task_definition}" | jq '.taskDefinition.executionRoleArn' -r)
+    - task_role=$(echo "${task_definition}" | jq '.taskDefinition.taskRoleArn' -r)
+    - task_network_mode=$(echo "${task_definition}" | jq '.taskDefinition.networkMode' -r)
+    - new_task_definition=$(echo "${task_definition}" | jq --arg IMAGE "${IMAGE}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions')
+    - aws ecs register-task-definition
+      --family "${TASK_FAMILY}"
+      --cpu "${task_cpu}"
+      --memory "${task_memory}"
+      --container-definitions "${new_task_definition}"
+      --task-role-arn "${task_role}"
+      --execution-role-arn "${task_execution_role}"
+      --network-mode "${task_network_mode}"
+    # update service:
+    - aws ecs update-service
+      --cluster "${CLUSTER}"
+      --service "${SERVICE}"
+      --task-definition "${TASK_FAMILY}"
+
+# ECS scheduled tasks:
+.ecs-deploy.events:
+  extends: .ecs-deploy.common
+  script:
+    # update task definition:
+    - task_definition=$(aws ecs describe-task-definition --task-definition "${TASK_FAMILY}")
+    - task_cpu=$(echo "${task_definition}" | jq '.taskDefinition.cpu' -r)
+    - task_memory=$(echo "${task_definition}" | jq '.taskDefinition.memory' -r)
+    - task_execution_role=$(echo "${task_definition}" | jq '.taskDefinition.executionRoleArn' -r)
+    - task_role=$(echo "${task_definition}" | jq '.taskDefinition.taskRoleArn' -r)
+    - task_network_mode=$(echo "${task_definition}" | jq '.taskDefinition.networkMode' -r)
+    - new_task_definition=$(echo "${task_definition}" | jq --arg IMAGE "${IMAGE}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions')
+    - aws ecs register-task-definition
+      --family "${TASK_FAMILY}"
+      --cpu "${task_cpu}"
+      --memory "${task_memory}"
+      --container-definitions "${new_task_definition}"
+      --task-role-arn "${task_role}"
+      --execution-role-arn "${task_execution_role}"
+      --network-mode "${task_network_mode}"
+    # update events target:
+    - targets=$(aws events list-targets-by-rule --rule "${TASK_FAMILY}" | jq -cr '.Targets')
+    - latest_task_definition_arn=$(aws ecs list-task-definitions --family-prefix "${TASK_FAMILY}" --status=ACTIVE --sort=DESC | jq -cr '.taskDefinitionArns[0]')
+    - new_targets=$(echo "${targets}" | jq --arg LATEST_TASK_DEFINITION_ARN "${latest_task_definition_arn}" '.[].EcsParameters.TaskDefinitionArn = $LATEST_TASK_DEFINITION_ARN')
+    - aws events put-targets
+      --rule "${TASK_FAMILY}"
+      --targets "${new_targets}"
