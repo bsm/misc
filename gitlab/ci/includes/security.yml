@@ -1,0 +1,163 @@
+# Collection of zero-config (code-wise) jobs for misc security checks.
+#
+# The main difference from default templates is that we want these jobs
+# to run on a) "main" merges b) merge requests.
+#
+# Usage:
+#
+#   # .gitlab-ci.yml
+#   stages:
+#     - test
+#   include:
+#     - project: bsm/misc
+#       ref: main
+#       file: /gitlab/ci/includes/security.yml
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/License-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+# SAST ------------------------------------------------------------------------
+
+# Golang
+gosec-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /gosec/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/*.go'
+
+# Ruby
+brakeman-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /brakeman/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/*.rb'
+        - '**/Gemfile'
+
+# Python
+bandit-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /bandit/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/*.py'
+
+# Javascript
+nodejs-scan-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /nodejs-scan/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/package.json'
+
+# Typescript and frontend(ish) stuff
+eslint-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /eslint/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/*.html'
+        - '**/*.js'
+        - '**/*.jsx'
+        - '**/*.ts'
+        - '**/*.tsx'
+
+# Multi-lang, https://semgrep.dev
+semgrep-sast:
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /semgrep/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+      exists:
+        - '**/*.py'
+        - '**/*.js'
+        - '**/*.jsx'
+        - '**/*.ts'
+        - '**/*.tsx'
+        - '**/*.c'
+        - '**/*.go'
+        - '**/*.java'
+
+# Dependency Scanning ---------------------------------------------------------
+
+gemnasium-dependency_scanning:
+  rules:
+    - if: $DEPENDENCY_SCANNING_DISABLED
+      when: never
+    - if: $DS_EXCLUDED_ANALYZERS =~ /gemnasium([^-]|$)/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/ &&
+          $CI_GITLAB_FIPS_MODE == "true"
+      exists: !reference [.gemnasium-shared-rule, exists]
+      variables:
+        DS_IMAGE_SUFFIX: "-fips"
+        DS_REMEDIATE: "false"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/
+      exists: !reference [.gemnasium-shared-rule, exists]
+
+gemnasium-python-dependency_scanning:
+  rules:
+    - if: $DEPENDENCY_SCANNING_DISABLED
+      when: never
+    - if: $DS_EXCLUDED_ANALYZERS =~ /gemnasium-python/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/ &&
+          $CI_GITLAB_FIPS_MODE == "true"
+      exists: !reference [.gemnasium-python-shared-rule, exists]
+      variables:
+        DS_IMAGE_SUFFIX: "-fips"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/
+      exists: !reference [.gemnasium-python-shared-rule, exists]
+    # Support passing of $PIP_REQUIREMENTS_FILE
+    # See https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#configuring-specific-analyzers-used-by-dependency-scanning
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/ &&
+          $PIP_REQUIREMENTS_FILE &&
+          $CI_GITLAB_FIPS_MODE == "true"
+      variables:
+        DS_IMAGE_SUFFIX: "-fips"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\bdependency_scanning\b/ &&
+          $PIP_REQUIREMENTS_FILE
+
+# License Scanning ------------------------------------------------------------
+
+license_scanning:
+  rules:
+    - if: $LICENSE_MANAGEMENT_DISABLED
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
+          $GITLAB_FEATURES =~ /\blicense_scanning\b/
+
+# Secret Detection ------------------------------------------------------------
+
+secret_detection:
+  rules:
+    - if: $SECRET_DETECTION_DISABLED
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
