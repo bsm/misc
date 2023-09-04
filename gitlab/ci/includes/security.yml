@@ -16,7 +16,6 @@
 include:
   - template: Jobs/SAST.gitlab-ci.yml
   - template: Jobs/Dependency-Scanning.gitlab-ci.yml
-  - template: Jobs/License-Scanning.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 # SAST ------------------------------------------------------------------------
@@ -144,15 +143,6 @@ gemnasium-python-dependency_scanning:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
           $GITLAB_FEATURES =~ /\bdependency_scanning\b/ &&
           $PIP_REQUIREMENTS_FILE
-
-# License Scanning ------------------------------------------------------------
-
-license_scanning:
-  rules:
-    - if: $LICENSE_MANAGEMENT_DISABLED
-      when: never
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" &&
-          $GITLAB_FEATURES =~ /\blicense_scanning\b/
 
 # Secret Detection ------------------------------------------------------------
 
