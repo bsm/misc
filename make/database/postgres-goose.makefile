@@ -5,7 +5,7 @@
 #   DATABASE_URL ?= postgres://127.0.0.1/DBNAME?sslmode=disable
 #
 #   .database.makefile:
-#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/database/postgres-goose.makefile
+#     curl -fsSL -o $@ https://raw.githubusercontent.com/bsm/misc/main/make/database/postgres-goose.makefile
 #
 #   include .database.makefile
 #

@@ -3,7 +3,7 @@
 # Embed into project Makefile like this:
 #
 #   .protogo.makefile:
-#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/go/proto.makefile
+#     curl -fsSL -o $@ https://raw.githubusercontent.com/bsm/misc/main/make/go/proto.makefile
 #
 #   include .protogo.makefile
 #

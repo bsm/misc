@@ -3,7 +3,7 @@
 # Embed into project Makefile like this:
 #
 #   .common.makefile:
-#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/go/common.makefile
+#     curl -fsSL -o $@ https://raw.githubusercontent.com/bsm/misc/main/make/go/common.makefile
 #
 #   include .common.makefile
 #

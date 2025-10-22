@@ -5,7 +5,7 @@
 #   DATABASE_URL ?= postgres://root:root@localhost:5432/DBNAME?sslmode=disable
 #
 #   .database.makefile:
-#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/database/postgres.makefile
+#     curl -fsSL -o $@ https://raw.githubusercontent.com/bsm/misc/main/make/database/postgres.makefile
 #
 #   include .database.makefile
 #

@@ -3,7 +3,7 @@
 # Embed into project Makefile like this:
 #
 #   .minimal.makefile:
-#     curl -fsSL -o $@ https://gitlab.com/bsm/misc/raw/master/make/go/minimal.makefile
+#     curl -fsSL -o $@ https://raw.githubusercontent.com/bsm/misc/main/make/go/minimal.makefile
 #
 #   include .minimal.makefile
 #
