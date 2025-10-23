@@ -1,0 +1,17 @@
+name: Lint
+description: "Lints Go code"
+inputs:
+  working-directory:
+    description: "The working directory"
+    required: false
+    default: "./"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+    - name: Run lint
+      uses: golangci/golangci-lint-action@v8
+      with:
+        working-directory: ${{ inputs.working-directory }}

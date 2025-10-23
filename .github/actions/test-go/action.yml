@@ -1,0 +1,23 @@
+name: Test
+description: "Tests Go code"
+inputs:
+  working-directory:
+    description: "The working directory"
+    required: false
+    default: "./"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+    - name: Setup Go
+      uses: actions/setup-go@v6
+      with:
+        go-version-file: ${{ inputs.working-directory }}/go.mod
+        cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+    - name: Run tests
+      shell: bash
+      with:
+        working-directory: ${{ inputs.working-directory }}
+      run: go test ./...
