@@ -18,6 +18,5 @@ runs:
         cache-dependency-path: ${{ inputs.working-directory }}/go.sum
     - name: Run tests
       shell: bash
-      with:
-        working-directory: ${{ inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}
       run: go test ./...
