@@ -3,25 +3,20 @@ on:
     inputs:
       context:
         description: "The Docker context"
-        required: true
         default: "."
         type: string
       file:
         description: "Path to Dockerfile"
-        required: false
         type: string
       image:
         description: "The image name"
-        required: true
         default: ghcr.io/${{ github.repository }}
         type: string
       tags:
         description: "List of tags as key-value pair attributes https://github.com/docker/metadata-action/?tab=readme-ov-file#tags-input"
-        required: false
         type: string
       labels:
         description: "List of custom labels https://github.com/docker/metadata-action/?tab=readme-ov-file"
-        required: false
         type: string
 
 jobs:
