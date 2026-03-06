@@ -11,6 +11,11 @@ runs:
   steps:
     - name: Checkout
       uses: actions/checkout@v6
+    - name: Setup Go
+      uses: actions/setup-go@v6
+      with:
+        go-version-file: ${{ inputs.working-directory }}/go.mod
+        cache-dependency-path: ${{ inputs.working-directory }}/go.sum
     - name: Run lint
       uses: golangci/golangci-lint-action@v9
       with:
