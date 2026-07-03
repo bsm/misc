@@ -5,13 +5,28 @@ on:
         description: "The working directory"
         default: "./"
         type: string
+      goprivate:
+        description: "GOPRIVATE glob for private modules (e.g. github.com/ORG/*). Empty = disabled."
+        default: ""
+        type: string
+    secrets:
+      gh-token:
+        description: "Token with read access to the private module repos."
+        required: false
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: ${{ inputs.goprivate }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Configure private module access
+        if: inputs.goprivate != ''
+        env:
+          GH_TOKEN: ${{ secrets.gh-token }}
+        run: git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
@@ -24,12 +39,19 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: ${{ inputs.goprivate }}
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Configure private module access
+        if: inputs.goprivate != ''
+        env:
+          GH_TOKEN: ${{ secrets.gh-token }}
+        run: git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
