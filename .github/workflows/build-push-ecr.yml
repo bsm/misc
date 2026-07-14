@@ -8,31 +8,38 @@ on:
       file:
         description: "Path to Dockerfile"
         type: string
-      repository:
-        description: "ECR repository name (image within the registry)"
-        default: ${{ github.event.repository.name }}
+      image:
+        description: "The full ECR image URI, e.g. <account>.dkr.ecr.<region>.amazonaws.com/<repo>"
+        required: true
         type: string
       aws-region:
         description: "AWS region of the ECR registry"
         required: true
         type: string
-      role-to-assume:
-        description: "IAM role ARN to assume via OIDC for ECR push"
-        required: true
+      environment:
+        description: "GitHub environment to run in (for environment-scoped secrets/vars)"
         type: string
       tags:
         description: "List of tags as key-value pair attributes https://github.com/docker/metadata-action/?tab=readme-ov-file#tags-input"
+        # Default: strip the leading v, so tag v1.2.3 -> image tag 1.2.3 (legacy convention).
+        default: |
+          type=semver,pattern={{version}}
         type: string
       labels:
         description: "List of custom labels https://github.com/docker/metadata-action/?tab=readme-ov-file"
         type: string
+    secrets:
+      aws-access-key-id:
+        required: true
+      aws-secret-access-key:
+        required: true
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     permissions:
       contents: read
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -40,10 +47,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         if: github.event_name != 'pull_request'
         with:
-          role-to-assume: ${{ inputs.role-to-assume }}
+          aws-access-key-id: ${{ secrets.aws-access-key-id }}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
           aws-region: ${{ inputs.aws-region }}
       - name: Login to Amazon ECR
-        id: ecr
         uses: aws-actions/amazon-ecr-login@v2
         if: github.event_name != 'pull_request'
       - name: Docker meta
@@ -51,7 +58,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ steps.ecr.outputs.registry }}/${{ inputs.repository }}
+            ${{ inputs.image }}
           tags: ${{ inputs.tags }}
           labels: ${{ inputs.labels }}
       - name: Setup Buildx
@@ -64,5 +71,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.meta.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
