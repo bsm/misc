@@ -1,0 +1,68 @@
+on:
+  workflow_call:
+    inputs:
+      context:
+        description: "The Docker context"
+        default: "."
+        type: string
+      file:
+        description: "Path to Dockerfile"
+        type: string
+      repository:
+        description: "ECR repository name (image within the registry)"
+        default: ${{ github.event.repository.name }}
+        type: string
+      aws-region:
+        description: "AWS region of the ECR registry"
+        required: true
+        type: string
+      role-to-assume:
+        description: "IAM role ARN to assume via OIDC for ECR push"
+        required: true
+        type: string
+      tags:
+        description: "List of tags as key-value pair attributes https://github.com/docker/metadata-action/?tab=readme-ov-file#tags-input"
+        type: string
+      labels:
+        description: "List of custom labels https://github.com/docker/metadata-action/?tab=readme-ov-file"
+        type: string
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        if: github.event_name != 'pull_request'
+        with:
+          role-to-assume: ${{ inputs.role-to-assume }}
+          aws-region: ${{ inputs.aws-region }}
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        if: github.event_name != 'pull_request'
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ steps.ecr.outputs.registry }}/${{ inputs.repository }}
+          tags: ${{ inputs.tags }}
+          labels: ${{ inputs.labels }}
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
