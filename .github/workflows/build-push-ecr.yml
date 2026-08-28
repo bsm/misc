@@ -28,11 +28,17 @@ on:
       labels:
         description: "List of custom labels https://github.com/docker/metadata-action/?tab=readme-ov-file"
         type: string
+      role-to-assume:
+        description: >-
+          IAM role ARN to assume via GitHub OIDC instead of static keys. When
+          set, the aws-* secrets are not needed.
+        type: string
+    # Static keys, only for callers that do not pass role-to-assume.
     secrets:
       aws-access-key-id:
-        required: true
+        required: false
       aws-secret-access-key:
-        required: true
+        required: false
 
 jobs:
   build-and-push-image:
@@ -40,13 +46,20 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read
+      # OIDC token for role-to-assume. GitHub rejects a called job that asks for
+      # more than its caller granted, so every caller (keys or role) must set
+      # `permissions: id-token: write` on the calling job.
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      # Either role-to-assume (OIDC) or the two key secrets; the action picks
+      # whichever is non-empty.
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         if: github.event_name != 'pull_request'
         with:
+          role-to-assume: ${{ inputs.role-to-assume }}
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
           aws-region: ${{ inputs.aws-region }}
