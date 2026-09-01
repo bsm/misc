@@ -28,6 +28,11 @@ on:
       labels:
         description: "List of custom labels https://github.com/docker/metadata-action/?tab=readme-ov-file"
         type: string
+      flavor:
+        description: "Flavor options https://github.com/docker/metadata-action/?tab=readme-ov-file#flavor-input. Defaults to no 'latest' tag: immutable-tag registries reject a second 'latest' push."
+        default: |
+          latest=false
+        type: string
       role-to-assume:
         description: >-
           IAM role ARN to assume via GitHub OIDC instead of static keys. When
@@ -74,6 +79,7 @@ jobs:
             ${{ inputs.image }}
           tags: ${{ inputs.tags }}
           labels: ${{ inputs.labels }}
+          flavor: ${{ inputs.flavor }}
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v4
       - name: Build and push
