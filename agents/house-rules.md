@@ -23,3 +23,9 @@ change it there, then copy it into each repository's `AGENTS.md`.
 10. **No agent attribution** in commits, pull requests, comments or docs.
 11. **Write plainly.** Simple English, short sentences, plain ASCII
     punctuation, no Oxford comma. Summaries are a few short bullets.
+
+### Go repositories
+
+- Follow Effective Go and Go Code Review Comments.
+- Tests for `foo.go` go in `foo_test.go`, runnable examples in
+  `example_test.go`.
